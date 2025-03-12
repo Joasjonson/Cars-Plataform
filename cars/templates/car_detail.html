@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="car-detail-container">
+  {% if car.image %}
+  <img src="{{ car.image.url }}" alt="{{ car.model }}" class="car-image">
+  {% else %}
+  <img src="/media/cars/no-image.jpeg" alt="Default car image">
+  {% endif %}
+  <h1>{{ car.brand }} {{ car.name }} - {{ car.factory_year }}</h1>
+  <p><strong>Model Year:</strong> {{ car.model_year }}</p>
+  <p><strong>Value:</strong> R$ {{ car.value }}</p>
+  <p><strong>Plate:</strong> {{ car.plate }}</p>
+  <p><strong>Posted by: {{ car.user.username }}</strong></p>
+  <p><strong>Contact:</strong> <a href="mailto:{{ car.user.email }}">{{ car.user.email }}</a></p>
+
+  {% if car.description %}
+  <p><strong>Description:</strong> {{ car.description }}</p>
+  {% else %}
+  <p><strong>Description:</strong> N/A</p>
+  {% endif %}
+
+  <!-- Additional images -->
+  {% if images %}
+  <div class="car-gallery">
+    {% for image in images %}
+    {% if image.image %}
+    <img src="{{ image.image.url }}" alt="Car image" class="car-gallery-image">
+    {% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <a href="{% url 'cars' %}" class="btn">Back to Cars</a>
+  {% if user.is_authenticated and car.user == user %}
+  <a href="{% url 'update_car' car.id %}" class="btn">Update Car</a>
+  <a href="{% url 'delete_car' car.id %}" class="btn-danger" data-car-id="{{ car.id }}"
+    onclick="return confirm('Are you sure you want to delete this car?')">Delete Car</a>
+  {% endif %}
+</div>
+
+<style>
+  .car-detail-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #e3e1e1;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .car-image {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+
+  .btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #0096c7;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+  }
+
+  .btn:hover {
+    background-color: #0075a8;
+  }
+
+  .btn-danger {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #d9534f;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+    font-weight: bold;
+  }
+
+  .btn-danger:hover {
+    background-color: #c9302c;
+  }
+
+  .car-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+    justify-content: center;
+  }
+
+  .car-gallery-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+</style>
+{% endblock %}

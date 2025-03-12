@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <style>
+    .banner {
+      background: url('/static/images/banner.jpg') center/cover no-repeat;
+      text-align: center;
+      padding: 50px 20px;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+      background-color: #0075a8;
+    }
+
+    .search-container {
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .search-container input {
+      width: 300px;
+      padding: 10px;
+      border-radius: 5px;
+      border: 2px solid #ddd;
+      font-size: 16px;
+    }
+
+    .search-container button {
+      background-color: #0096c7;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      margin-left: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .search-container button:hover {
+      background-color: #0075a8;
+    }
+
+    .car-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .car-card {
+      background: white;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      overflow: hidden;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .car-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .car-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .car-card h2 {
+      font-size: 1.4rem;
+      margin: 10px 0;
+    }
+
+    .car-card p {
+      font-size: 1rem;
+      color: #555;
+    }
+
+    .details-btn {
+      display: inline-block;
+      margin: 10px auto;
+      padding: 10px 15px;
+      background: #0096c7;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+
+    .details-btn:hover {
+      background: #0075a8;
+    }
+
+    .messages {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+    
+  </style>
+
+  <div class="banner">
+    <h1>Find Your Dream Car Now!</h1>
+    <p>Explore the best deals and latest models available</p>
+  </div>
+
+  <div class="search-container">
+    <form method="GET" action="{% url 'cars' %}">
+      <input type="text" name="search" placeholder="Search for a car...">
+      <button type="submit">Search</button>
+    </form>
+  </div>
+
+  <div class="messages">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="car-grid">
+    {% if cars %}
+      {% for car in cars %}
+        <div class="car-card">
+          <a href="{% url 'car_detail' car.id %}">
+            {% if car.image %}
+              <img src="{{ car.image.url }}" alt="{{ car.model }} - {{ car.brand }}">
+            {% else %}
+              <img src="/media/cars/no-image.jpeg" alt="Default car image">
+            {% endif %}
+          </a>
+          <h2>{{ car.brand.name }} {{ car.name }}</h2>
+          <p>{{ car.model_year }} - {{ car.factory_year }}</p>
+          <p>Value: ${{ car.value }}</p>
+          <a href="{% url 'car_detail' car.id %}" class="details-btn">View Details</a>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="no-results">No cars found.</p>
+      <p><a href="{% url 'cars' %}" class="btn">Back to Cars</a></p>
+    {% endif %}
+  </div>
+{% endblock %}

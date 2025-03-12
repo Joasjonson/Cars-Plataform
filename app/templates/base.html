@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{% endblock %}</title>
+  <style>
+    body {
+        font-family: 'Open Sans', sans-serif;
+        background-color: #f7f7f7;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        background-color: #0096c7;
+        color: #fff;
+        text-align: center;
+    }
+
+    footer {
+        background-color: #ccc;
+        color: #333;
+        padding: 20px;
+        text-align: center;
+    }
+
+    /* Estilização do menu */
+    nav {
+        background-color: #0096c7;
+        color: #fff;
+        height: 50px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+    }
+
+    .nav-left, .nav-right {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .nav-left {
+        gap: 15px;
+    }
+
+    .nav-right {
+        gap: 15px;
+    }
+
+    nav ul li a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 16px;
+        padding: 15px;
+        transition: all 0.3s ease;
+    }
+
+    nav ul li a:hover {
+        background-color: #32bbe8;
+    }
+
+    nav ul li.active a {
+        background-color: #666;
+    }
+
+    nav ul li.active a:hover {
+        background-color: #999;
+    }
+
+    /* R */
+    @media (max-width: 600px) {
+        nav {
+            flex-direction: column;
+            height: auto;
+            padding: 10px;
+        }
+
+        .nav-left, .nav-right {
+            justify-content: center;
+            width: 100%;
+        }
+
+        .nav-left {
+            margin-bottom: 10px;
+        }
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <!-- Links right side -->
+      <ul class="nav-left">
+        
+        {% if user.is_authenticated %}
+          <li>Hello, {{ user.username }}</li>
+          <li><a href="{% url 'cars' %}">Cars</a></li>
+          <li><a href="{% url 'new_car' %}">New Car</a></li>
+        {% else %}
+          <li><a href="{% url 'cars' %}">Cars</a></li>
+        {% endif %}
+      </ul>
+
+      <!-- Links left side -->
+      <ul class="nav-right">
+        {% if user.is_authenticated %}
+          <li><a href="{% url 'logout_view' %}">Logout</a></li>
+        {% else %}
+          <li><a href="{% url 'register_view' %}">Register</a></li>
+          <li><a href="{% url 'login_view' %}">Login</a></li>
+        {% endif %}
+        
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    {% block content %}
+    {% endblock %}
+  </main>
+
+  <footer>
+    <p>&copy; 2025 PyCar Inc.</p>
+  </footer>
+</body>
+</html>
